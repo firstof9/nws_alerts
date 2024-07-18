@@ -1,4 +1,5 @@
 """Adds config flow for NWS Alerts."""
+
 from __future__ import annotations
 
 import logging
@@ -12,19 +13,9 @@ from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 
-from .const import (
-    API_ENDPOINT,
-    CONF_GPS_LOC,
-    CONF_INTERVAL,
-    CONF_TIMEOUT,
-    CONF_TRACKER,
-    CONF_ZONE_ID,
-    DEFAULT_INTERVAL,
-    DEFAULT_NAME,
-    DEFAULT_TIMEOUT,
-    DOMAIN,
-    USER_AGENT,
-)
+from .const import (API_ENDPOINT, CONF_GPS_LOC, CONF_INTERVAL, CONF_TIMEOUT,
+                    CONF_TRACKER, CONF_ZONE_ID, DEFAULT_INTERVAL, DEFAULT_NAME,
+                    DEFAULT_TIMEOUT, DOMAIN, USER_AGENT)
 
 JSON_FEATURES = "features"
 JSON_PROPERTIES = "properties"
