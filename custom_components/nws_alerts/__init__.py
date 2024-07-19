@@ -241,45 +241,51 @@ async def async_get_alerts(zone_id: str = "", gps_loc: str = "") -> dict:
     if data is not None:
         features = data["features"]
         for alert in features:
+            alerts["alerts"] = {}
+            # Generate stable Alert ID
+            id = await generate_id(alert["id"])
+            alerts["alerts"][id] = {}
+            alerts["alerts"][id]["id"] = id
+
             event = alert["properties"]["event"]
+            
             if "NWSheadline" in alert["properties"]["parameters"]:
-                alerts[id]["headline"] = alert["properties"]["parameters"][
+                alerts["alerts"][id]["headline"] = alert["properties"]["parameters"][
                     "NWSheadline"
                 ][0]
             else:
-                alerts[id]["headline"] = event
+                alerts["alerts"][id]["headline"] = event
 
-            # Generate stable Alert ID
-            id = await generate_id(alert["id"])
 
-            alerts[id]["url"] = alert["id"]
-            alerts[id]["type"] = alert["properties"]["messageType"]
-            alerts[id]["status"] = alert["properties"]["status"]
-            alerts[id]["description"] = alert["properties"]["description"]
-            alerts[id]["instruction"] = alert["properties"]["instruction"]
-            alerts[id]["severity"] = alert["properties"]["severity"]
-            alerts[id]["certainty"] = alert["properties"]["certainty"]
-            alerts[id]["onset"] = alert["properties"]["onset"]
-            alerts[id]["expires"] = alert["properties"]["expires"]
+            alerts["alerts"][id]["url"] = alert["id"]
+            alerts["alerts"][id]["type"] = alert["properties"]["messageType"]
+            alerts["alerts"][id]["status"] = alert["properties"]["status"]
+            alerts["alerts"][id]["description"] = alert["properties"]["description"]
+            alerts["alerts"][id]["instruction"] = alert["properties"]["instruction"]
+            alerts["alerts"][id]["severity"] = alert["properties"]["severity"]
+            alerts["alerts"][id]["certainty"] = alert["properties"]["certainty"]
+            alerts["alerts"][id]["onset"] = alert["properties"]["onset"]
+            alerts["alerts"][id]["expires"] = alert["properties"]["expires"]
 
-            alerts[id]["display_desc"] += (
+            alerts["alerts"][id]["display_desc"] = (
                 "\n>\nHeadline: %s\nStatus: %s\nMessage Type: %s\nSeverity: %s\nCertainty: %s\nOnset: %s\nExpires: %s\nDescription: %s\nInstruction: %s"
                 % (
-                    alerts[id]["headline"],
-                    alerts[id]["status"],
-                    alerts[id]["type"],
-                    alerts[id]["severity"],
-                    alerts[id]["certainty"],
-                    alerts[id]["onset"],
-                    alerts[id]["expires"],
-                    alerts[id]["description"],
-                    alerts[id]["instruction"],
+                    alerts["alerts"][id]["headline"],
+                    alerts["alerts"][id]["status"],
+                    alerts["alerts"][id]["type"],
+                    alerts["alerts"][id]["severity"],
+                    alerts["alerts"][id]["certainty"],
+                    alerts["alerts"][id]["onset"],
+                    alerts["alerts"][id]["expires"],
+                    alerts["alerts"][id]["description"],
+                    alerts["alerts"][id]["instruction"],
                 )
             )
+        alerts["state"] = len(features)
 
     return alerts
 
 
 async def generate_id(val: str) -> str:
     hex_string = hashlib.md5(val.encode("UTF-8")).hexdigest()
-    return uuid.UUID(hex=hex_string)
+    return str(uuid.UUID(hex=hex_string))

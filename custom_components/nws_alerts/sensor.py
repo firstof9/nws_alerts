@@ -113,12 +113,12 @@ class NWSAlertSensor(CoordinatorEntity):
         return self._icon
 
     @property
-    def state(self):
+    def state(self) -> int|None:
         """Return the state of the sensor."""
         if self.coordinator.data is None:
             return None
         elif "state" in self.coordinator.data.keys():
-            return self.coordinator.data["state"]
+            return int(self.coordinator.data["state"])
         return None
 
     @property
@@ -130,16 +130,11 @@ class NWSAlertSensor(CoordinatorEntity):
             return attrs
 
         attrs[ATTR_ATTRIBUTION] = ATTRIBUTION
-        attrs["title"] = self.coordinator.data["event"]
-        attrs["event_id"] = self.coordinator.data["event_id"]
-        attrs["message_type"] = self.coordinator.data["message_type"]
-        attrs["event_status"] = self.coordinator.data["event_status"]
-        attrs["event_severity"] = self.coordinator.data["event_severity"]
-        attrs["event_onset"] = self.coordinator.data["event_onset"]
-        attrs["event_expires"] = self.coordinator.data["event_expires"]
-        attrs["display_desc"] = self.coordinator.data["display_desc"]
-        attrs["spoken_desc"] = self.coordinator.data["spoken_desc"]
-
+        x = 0
+        for alert in self.coordinator.data["alerts"]:
+            name = f'alert{x}'
+            attrs[name] = self.coordinator.data["alerts"][alert]
+            x += 1
         return attrs
 
     @property
