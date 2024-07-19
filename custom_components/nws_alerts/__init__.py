@@ -11,14 +11,27 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_registry import (
-    async_entries_for_config_entry, async_get)
-from homeassistant.helpers.update_coordinator import (DataUpdateCoordinator,
-                                                      UpdateFailed)
+    async_entries_for_config_entry,
+    async_get,
+)
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import (API_ENDPOINT, CONF_GPS_LOC, CONF_INTERVAL, CONF_TIMEOUT,
-                    CONF_TRACKER, CONF_ZONE_ID, COORDINATOR, DEFAULT_INTERVAL,
-                    DEFAULT_TIMEOUT, DOMAIN, ISSUE_URL, PLATFORMS, USER_AGENT,
-                    VERSION)
+from .const import (
+    API_ENDPOINT,
+    CONF_GPS_LOC,
+    CONF_INTERVAL,
+    CONF_TIMEOUT,
+    CONF_TRACKER,
+    CONF_ZONE_ID,
+    COORDINATOR,
+    DEFAULT_INTERVAL,
+    DEFAULT_TIMEOUT,
+    DOMAIN,
+    ISSUE_URL,
+    PLATFORMS,
+    USER_AGENT,
+    VERSION,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -248,14 +261,13 @@ async def async_get_alerts(zone_id: str = "", gps_loc: str = "") -> dict:
             alerts["alerts"][id]["id"] = id
 
             event = alert["properties"]["event"]
-            
+
             if "NWSheadline" in alert["properties"]["parameters"]:
                 alerts["alerts"][id]["headline"] = alert["properties"]["parameters"][
                     "NWSheadline"
                 ][0]
             else:
                 alerts["alerts"][id]["headline"] = event
-
 
             alerts["alerts"][id]["url"] = alert["id"]
             alerts["alerts"][id]["type"] = alert["properties"]["messageType"]

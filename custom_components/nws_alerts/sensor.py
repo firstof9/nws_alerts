@@ -13,9 +13,20 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import slugify
 
 from . import AlertsDataUpdateCoordinator
-from .const import (ATTRIBUTION, CONF_GPS_LOC, CONF_INTERVAL, CONF_TIMEOUT,
-                    CONF_TRACKER, CONF_ZONE_ID, COORDINATOR, DEFAULT_ICON,
-                    DEFAULT_INTERVAL, DEFAULT_NAME, DEFAULT_TIMEOUT, DOMAIN)
+from .const import (
+    ATTRIBUTION,
+    CONF_GPS_LOC,
+    CONF_INTERVAL,
+    CONF_TIMEOUT,
+    CONF_TRACKER,
+    CONF_ZONE_ID,
+    COORDINATOR,
+    DEFAULT_ICON,
+    DEFAULT_INTERVAL,
+    DEFAULT_NAME,
+    DEFAULT_TIMEOUT,
+    DOMAIN,
+)
 
 # ---------------------------------------------------------
 # API Documentation
@@ -113,7 +124,7 @@ class NWSAlertSensor(CoordinatorEntity):
         return self._icon
 
     @property
-    def state(self) -> int|None:
+    def state(self) -> int | None:
         """Return the state of the sensor."""
         if self.coordinator.data is None:
             return None
@@ -132,7 +143,7 @@ class NWSAlertSensor(CoordinatorEntity):
         attrs[ATTR_ATTRIBUTION] = ATTRIBUTION
         x = 0
         for alert in self.coordinator.data["alerts"]:
-            name = f'alert{x}'
+            name = f"alert{x}"
             attrs[name] = self.coordinator.data["alerts"][alert]
             x += 1
         return attrs
