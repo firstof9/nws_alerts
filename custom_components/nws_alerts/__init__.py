@@ -158,6 +158,7 @@ class AlertsDataUpdateCoordinator(DataUpdateCoordinator):
                 data = await update_alerts(self.config, coords)
             except Exception as error:
                 raise UpdateFailed(error) from error
+            _LOGGER.debug("Data: %s", data)
             return data
 
     async def _get_tracker_gps(self):
@@ -253,8 +254,8 @@ async def async_get_alerts(zone_id: str = "", gps_loc: str = "") -> dict:
 
     if data is not None:
         features = data["features"]
+        alerts["alerts"] = {}
         for alert in features:
-            alerts["alerts"] = {}
             # Generate stable Alert ID
             id = await generate_id(alert["id"])
             alerts["alerts"][id] = {}
