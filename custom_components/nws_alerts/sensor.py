@@ -91,10 +91,7 @@ class NWSAlertSensor(CoordinatorEntity):
         attrs[ATTR_ATTRIBUTION] = ATTRIBUTION
         x = 0
         if "alerts" in self.coordinator.data:
-            for alert in self.coordinator.data["alerts"]:
-                name = f"alert{x}"
-                attrs[name] = self.coordinator.data["alerts"][alert]
-                x += 1
+            attrs["alerts"] = self.coordinator.data["alerts"]
         return attrs
 
     @property

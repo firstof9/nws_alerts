@@ -259,41 +259,27 @@ async def async_get_alerts(zone_id: str = "", gps_loc: str = "") -> dict:
             # Generate stable Alert ID
             id = await generate_id(alert["id"])
             alerts["alerts"][id] = {}
+            alerts["alerts"][id]["event"] =  alert["properties"]["event"]
             alerts["alerts"][id]["id"] = id
+            alerts["alerts"][id]["url"] = alert["id"]
 
             event = alert["properties"]["event"]
-
             if "NWSheadline" in alert["properties"]["parameters"]:
                 alerts["alerts"][id]["headline"] = alert["properties"]["parameters"][
                     "NWSheadline"
                 ][0]
             else:
                 alerts["alerts"][id]["headline"] = event
-
-            alerts["alerts"][id]["url"] = alert["id"]
+            
             alerts["alerts"][id]["type"] = alert["properties"]["messageType"]
             alerts["alerts"][id]["status"] = alert["properties"]["status"]
-            alerts["alerts"][id]["description"] = alert["properties"]["description"]
-            alerts["alerts"][id]["instruction"] = alert["properties"]["instruction"]
             alerts["alerts"][id]["severity"] = alert["properties"]["severity"]
             alerts["alerts"][id]["certainty"] = alert["properties"]["certainty"]
             alerts["alerts"][id]["onset"] = alert["properties"]["onset"]
             alerts["alerts"][id]["expires"] = alert["properties"]["expires"]
+            alerts["alerts"][id]["description"] = alert["properties"]["description"]
+            alerts["alerts"][id]["instruction"] = alert["properties"]["instruction"]
 
-            alerts["alerts"][id]["display_desc"] = (
-                "\n>\nHeadline: %s\nStatus: %s\nMessage Type: %s\nSeverity: %s\nCertainty: %s\nOnset: %s\nExpires: %s\nDescription: %s\nInstruction: %s"
-                % (
-                    alerts["alerts"][id]["headline"],
-                    alerts["alerts"][id]["status"],
-                    alerts["alerts"][id]["type"],
-                    alerts["alerts"][id]["severity"],
-                    alerts["alerts"][id]["certainty"],
-                    alerts["alerts"][id]["onset"],
-                    alerts["alerts"][id]["expires"],
-                    alerts["alerts"][id]["description"],
-                    alerts["alerts"][id]["instruction"],
-                )
-            )
         alerts["state"] = len(features)
 
     return alerts
