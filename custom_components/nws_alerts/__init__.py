@@ -254,33 +254,39 @@ async def async_get_alerts(zone_id: str = "", gps_loc: str = "") -> dict:
 
     if data is not None:
         features = data["features"]
-        alerts["alerts"] = {}
+        alert_list = []
         for alert in features:
+
+            tmp_dict = {}
+
             # Generate stable Alert ID
             id = await generate_id(alert["id"])
-            alerts["alerts"][id] = {}
-            alerts["alerts"][id]["event"] =  alert["properties"]["event"]
-            alerts["alerts"][id]["id"] = id
-            alerts["alerts"][id]["url"] = alert["id"]
+
+            tmp_dict["event"] =  alert["properties"]["event"]
+            tmp_dict["id"] = id
+            tmp_dict["url"] = alert["id"]
 
             event = alert["properties"]["event"]
             if "NWSheadline" in alert["properties"]["parameters"]:
-                alerts["alerts"][id]["headline"] = alert["properties"]["parameters"][
+                tmp_dict["headline"] = alert["properties"]["parameters"][
                     "NWSheadline"
                 ][0]
             else:
-                alerts["alerts"][id]["headline"] = event
+                tmp_dict["headline"] = event
             
-            alerts["alerts"][id]["type"] = alert["properties"]["messageType"]
-            alerts["alerts"][id]["status"] = alert["properties"]["status"]
-            alerts["alerts"][id]["severity"] = alert["properties"]["severity"]
-            alerts["alerts"][id]["certainty"] = alert["properties"]["certainty"]
-            alerts["alerts"][id]["onset"] = alert["properties"]["onset"]
-            alerts["alerts"][id]["expires"] = alert["properties"]["expires"]
-            alerts["alerts"][id]["description"] = alert["properties"]["description"]
-            alerts["alerts"][id]["instruction"] = alert["properties"]["instruction"]
+            tmp_dict["type"] = alert["properties"]["messageType"]
+            tmp_dict["status"] = alert["properties"]["status"]
+            tmp_dict["severity"] = alert["properties"]["severity"]
+            tmp_dict["certainty"] = alert["properties"]["certainty"]
+            tmp_dict["onset"] = alert["properties"]["onset"]
+            tmp_dict["expires"] = alert["properties"]["expires"]
+            tmp_dict["description"] = alert["properties"]["description"]
+            tmp_dict["instruction"] = alert["properties"]["instruction"]
+
+            alert_list.append(tmp_dict)
 
         alerts["state"] = len(features)
+        alerts["alerts"] = alert_list
 
     return alerts
 
